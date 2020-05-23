@@ -15,6 +15,22 @@ namespace BlazorComponentUTSample.Test
     public class FeatchDataCSharpTest : TestContext
     {
         [Fact]
+        public void LoadingBeforeLoadData()
+        {
+            // set empty record mock
+            var forecasts = new List<WeatherForecast>();
+            var mockService = new MockWeatherService();
+            mockService.Task.SetResult(forecasts);
+
+            Services.AddSingleton<IWeatherService>(mockService);
+
+            var fetchData = RenderComponent<FetchData>();
+
+            var expectedHtml = @"Loading...";
+            fetchData.Find("em").MarkupMatches(expectedHtml);
+        }
+
+        [Fact]
         public void ZeroDataCase()
         {
             // set empty record mock
